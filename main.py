@@ -20,6 +20,8 @@ slice_types = [
     'Scheme',
     'Vanguard']
 
+matched_cards = {}
+
 # Tested Updating, Slicing and Loading Methods
 #data_manager.update_sliced_card_data(True)
 data_manager.load_slices_to_memory(slice_types)

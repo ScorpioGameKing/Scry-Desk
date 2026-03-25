@@ -1,1 +1,1 @@
-from data_manager._updater import DataManager
+from data_manager._data_manager import DataManager
