@@ -18,6 +18,10 @@ class DataManager():
     soft_search_loaded_slices_for_color_identity(self, color_identity:list[str]) -> dict[str:dict]:
     -> Used to soft search for a card by color identity in the loaded slices. This returns each
        card that contains the given color identity as a subset. 
+
+    soft_search_loaded_slices_for_colors(self, colors:list[str]) -> dict[str:dict]:
+    -> Used to soft search for a card by colors in the loaded slices. This returns each
+       card that contains the given color(s) as a subset. 
     """
 
     # --------------------------------------------------------------------------------------------------
@@ -180,8 +184,8 @@ class DataManager():
            ['B', 'R', 'G'] and so on.
 
         VALUES:
-        card_name:str 
-        -> The name of the card you want to soft search for.
+        color_identity:list[str] 
+        -> The colors in the identity of the card you want to soft search for.
 
         RETURNS:
         dict[str:dict] 
@@ -197,4 +201,34 @@ class DataManager():
                             if set(color_identity).issubset(self.loaded_slices[type_slice][card][card_set]['color_identity']):
                                 matches.update({card:self.loaded_slices[type_slice][card]})
         return matches
-        # --------------------------------------------------------------------------------------------------
+
+    def soft_search_loaded_slices_for_colors(self, colors:list[str]) -> dict[str:dict]:
+        """
+        Used to soft search for a card by colors in the loaded slices. This returns each
+        card that contains the given color(s) as a subset. 
+        
+        EXAMPLE:
+        soft_search_loaded_slices_for_colors(['B']) 
+        -> This would return all cards with Black in the cost
+        including all combinations i.e. ['B', 'G'], ['U', 'B'], 
+        ['B', 'R', 'G'] and so on.
+
+        VALUES:
+        colors:list[str] 
+        -> The colors of the card you want to soft search for.
+
+        RETURNS:
+        dict[str:dict] 
+        -> A Dictionary of the matched card names and the matched card from 
+        the loaded slices.
+        """
+        matches = {}
+        for type_slice in self.loaded_slices:
+            if len(self.loaded_slices[type_slice]) > 0:
+                for card in self.loaded_slices[type_slice]:
+                    for card_set in self.loaded_slices[type_slice][card]:
+                        if 'colors' in self.loaded_slices[type_slice][card][card_set]:
+                            if set(colors).issubset(self.loaded_slices[type_slice][card][card_set]['colors']):
+                                matches.update({card:self.loaded_slices[type_slice][card]})
+        return matches
+    # --------------------------------------------------------------------------------------------------
