@@ -1,3 +1,5 @@
+**/__pycache__/
 env
 card_data/bulk_data/*
 card_data/sliced_data/*
+card_data/saved_searches/*
