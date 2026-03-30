@@ -150,7 +150,7 @@ class DataManager():
     # --------------------------------------------------------------------------------------------------
     # Soft Search Slice Methods
     # --------------------------------------------------------------------------------------------------
-    def soft_search_loaded_slices_for_name(self, card_name:str) -> dict[str:dict]:
+    def soft_search_for_name(self, card_name:str, card_pool:dict=None) -> dict[str:dict]:
         """
         Used to soft search for a card by name in the loaded slices. This returns each
         card that contains the given string in the card name.
@@ -159,17 +159,23 @@ class DataManager():
         card_name:str 
         -> The name of the card you want to soft search for.
 
+        card_pool:dict=None
+        -> The pool of card slices to search, defaults to the loaded slices when None
+
         RETURNS:
         dict[str:dict] 
         -> A Dictionary of the matched card names and the matched card from 
            the loaded slices.
         """
+        if card_pool == None: card_pool = self.loaded_slices
         matches = {}
-        for type_slice in self.loaded_slices:
-            if len(self.loaded_slices[type_slice]) > 0:
-                for card in self.loaded_slices[type_slice]:
+        for type_slice in card_pool:
+            if len(card_pool[type_slice]) > 0:
+                cards = {}
+                for card in card_pool[type_slice]:
                     if card_name in card:
-                        matches.update({card:self.loaded_slices[type_slice][card]})
+                        cards.update({card:card_pool[type_slice][card]})
+                matches.update({type_slice:cards})
         return matches
     
     def soft_search_loaded_slices_for_color_identity(self, color_identity:list[str]) -> dict[str:dict]:
