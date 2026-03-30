@@ -178,7 +178,7 @@ class DataManager():
                 matches.update({type_slice:cards})
         return matches
     
-    def soft_search_loaded_slices_for_color_identity(self, color_identity:list[str]) -> dict[str:dict]:
+    def soft_search_for_color_identity(self, color_identity:list[str], card_pool:dict=None) -> dict[str:dict]:
         """
         Used to soft search for a card by color identity in the loaded slices. This returns each
         card that contains the given color identity as a subset. 
@@ -193,22 +193,28 @@ class DataManager():
         color_identity:list[str] 
         -> The colors in the identity of the card you want to soft search for.
 
+        card_pool:dict=None
+        -> The card pool to search the criteira for. Defaults to loaded slices when None.
+
         RETURNS:
         dict[str:dict] 
         -> A Dictionary of the matched card names and the matched card from 
            the loaded slices.
         """
         matches = {}
-        for type_slice in self.loaded_slices:
-            if len(self.loaded_slices[type_slice]) > 0:
-                for card in self.loaded_slices[type_slice]:
-                    for card_set in self.loaded_slices[type_slice][card]:
-                        if 'color_identity' in self.loaded_slices[type_slice][card][card_set]:
-                            if set(color_identity).issubset(self.loaded_slices[type_slice][card][card_set]['color_identity']):
-                                matches.update({card:self.loaded_slices[type_slice][card]})
+        if card_pool == None: card_pool = self.loaded_slices
+        for type_slice in card_pool:
+            if len(card_pool[type_slice]) > 0:
+                cards = {}
+                for card in card_pool[type_slice]:
+                    for card_set in card_pool[type_slice][card]:
+                        if 'color_identity' in card_pool[type_slice][card][card_set]:
+                            if set(color_identity).issubset(card_pool[type_slice][card][card_set]['color_identity']):
+                                cards.update({card:card_pool[type_slice][card]})
+                matches.update({type_slice:cards})
         return matches
 
-    def soft_search_loaded_slices_for_colors(self, colors:list[str]) -> dict[str:dict]:
+    def soft_search_for_colors(self, colors:list[str], card_pool:dict=None) -> dict[str:dict]:
         """
         Used to soft search for a card by colors in the loaded slices. This returns each
         card that contains the given color(s) as a subset. 
@@ -223,18 +229,24 @@ class DataManager():
         colors:list[str] 
         -> The colors of the card you want to soft search for.
 
+        card_pool:dict=None
+        -> The card pool to search through. Defaults to loaded slices when None
+
         RETURNS:
         dict[str:dict] 
         -> A Dictionary of the matched card names and the matched card from 
         the loaded slices.
         """
+        if card_pool == None: card_pool = self.loaded_slices
         matches = {}
-        for type_slice in self.loaded_slices:
-            if len(self.loaded_slices[type_slice]) > 0:
-                for card in self.loaded_slices[type_slice]:
-                    for card_set in self.loaded_slices[type_slice][card]:
-                        if 'colors' in self.loaded_slices[type_slice][card][card_set]:
-                            if set(colors).issubset(self.loaded_slices[type_slice][card][card_set]['colors']):
-                                matches.update({card:self.loaded_slices[type_slice][card]})
+        for type_slice in card_pool:
+            if len(card_pool[type_slice]) > 0:
+                cards = {}
+                for card in card_pool[type_slice]:
+                    for card_set in card_pool[type_slice][card]:
+                        if 'colors' in card_pool[type_slice][card][card_set]:
+                            if set(colors).issubset(card_pool[type_slice][card][card_set]['colors']):
+                                cards.update({card:card_pool[type_slice][card]})
+                matches.update({type_slice:cards})
         return matches
     # --------------------------------------------------------------------------------------------------
