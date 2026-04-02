@@ -48,7 +48,8 @@ class DataManager():
             'Phenomenon',
             'Plane',
             'Scheme',
-            'Vanguard']
+            'Vanguard',
+            'Token']
         self.loaded_slices = {}
         for slice_type in self.slice_types:
             loaded_data_slice = {}
